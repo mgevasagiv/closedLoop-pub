@@ -61,6 +61,7 @@ classdef BadChannels < handle
             end
         end
         
+        
         function saveEDF(obj,chansToSave, nameEDF)
             
             %A method that saves EDF file - 
@@ -196,31 +197,36 @@ classdef BadChannels < handle
             Nsamples = size(dataMatEDF,2);
             A = zeros(Nsamples,1);
             EDFHeader.labels{NStimCh} = sprintf('stimulation');
-            
-            
-            if isfield(obj.EXP_DATA,'stimTiming') % adding a last channel with stimulation timing
+
+            if isfield(obj.expData,'stimTiming') % adding a last channel with stimulation timing
                 
-            if obj.BRBasedStim
-                tstim = obj.expData.stimTiming.validatedTTL_BR_msec;
-                for jStim = 1:length(tstim)
-                    A(int64(sort(unique([tstim-1, tstim,tstim+1])))) = obj.stimVal;
+                if obj.BRBasedStim
+                    tstim = obj.expData.stimTiming.validatedTTL_BR_msec;
+                    for jStim = 1:length(tstim)
+                        A(int64(sort(unique([tstim-1, tstim,tstim+1])))) = obj.stimVal;
+                    end
+                    dataMatEDF(NStimCh,:) = A;
+                    
+                else
+                    
+                    tstim = obj.expData.stimTiming.validatedTTL_NLX;
+                    %                         else
+                    %                             TTL_struct = load(fullfile(header.processedDataPath,'STIM_TTLs_NLX.mat'),'TTL_struct'); TTL_struct = TTL_struct.TTL_struct;
+                    %                             tstim = TTL_struct(1).t_stim_TRAIN_END_MICRO_based_sec *obj.samplerate; % msec, NLX time
+                    %                             tstim(isnan(tstim)) = [];
+                    %                         end
+                    for jStim = 1:length(tstim)
+                        A(int64(sort(unique([tstim-1, tstim,tstim+1])))) = obj.stimVal;
+                    end
+                    dataMatEDF(NStimCh,:) = A;
                 end
-                dataMatEDF(NStimCh,:) = A;
-            else
                 
-                tstim = obj.expData.stimTiming.validatedTTL_NLX;
-                %                         else
-                %                             TTL_struct = load(fullfile(header.processedDataPath,'STIM_TTLs_NLX.mat'),'TTL_struct'); TTL_struct = TTL_struct.TTL_struct;
-                %                             tstim = TTL_struct(1).t_stim_TRAIN_END_MICRO_based_sec *obj.samplerate; % msec, NLX time
-                %                             tstim(isnan(tstim)) = [];
-                %                         end
-                for jStim = 1:length(tstim)
-                    A(int64(sort(unique([tstim-1, tstim,tstim+1])))) = obj.stimVal;
-                end
+            elseif isfield(obj.expData,'timestamps_us')
+                tstim = obj.expData.timestamps_us.X/1000;
+                A(int64(tstim),1) = obj.stimVal;
                 dataMatEDF(NStimCh,:) = A;
             end
             
-            end 
 
             EDFHeader.samplerate = obj.samplerate;
             EDFHeader.annotation = [];
@@ -453,7 +459,7 @@ classdef BadChannels < handle
                     disp([obj.sourceFolderMacro,'\CSC',num2str(iChan),'.mat doesnt exist']);
                     continue;
                 end
-                data = data.data;
+                data = data.data(:)';
                 %detect spikes and save
                 [peakTimes, peakStats] = IIS_det.detectTimes(data, true);
                 save([obj.sourceFolderMacro,obj.spikeFileName,num2str(iChan),'.mat'],'peakTimes','peakStats','IIS_det');
