@@ -448,6 +448,7 @@ classdef BadChannels < handle
             %filenames as defined by the property spikeFileName
             
             IIS_det = SpikeWaveDetector;
+            IIS_det.samplingRate = obj.samplerate;
             
             nChans = length(obj.macroMontage);
             for iChan = 1:nChans
