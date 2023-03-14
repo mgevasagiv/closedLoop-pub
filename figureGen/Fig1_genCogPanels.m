@@ -47,31 +47,6 @@ end
 
 %%
 
-subj = couple_mat_PRUNED(:,3);
-dprimeDiff = visualPAL_fig_data.dprime_diff(:);
-Nrec_diff = visualPAL_fig_data.N_rec_diff(:);
-NfalsePos_diff = visualPAL_fig_data.N_falsePos_diff(:);
-pairingDiff = visualPAL_fig_data.correctPair_diff(:);
-stimType = color_i(:);
-stimType(stimType ==2) = 1;
-behav_table = table(subj, dprimeDiff, Nrec_diff, NfalsePos_diff, pairingDiff, stimType);
-
-glme = fitglme(behav_table,'dprimeDiff ~ 1 +  stimType + (1|subj)');
-[psi,dispersion,stats] = covarianceParameters(glme);
-stats{1}
-
-rows = find(behav_table.stimType == 1);
-behav_table_sync = behav_table(rows,:);
-formula = 'dprimeDiff ~ 1 + (1|subj)';
-lme1 = fitlme(behav_table_sync,formula,...
-    'FitMethod','ML')
-formula = 'dprimeDiff ~ NfalsePos_diff + (1|subj)';
-lme2 = fitlme(behav_table_sync,formula,...
-    'FitMethod','ML');
-results = compare(lme1,lme2);
-disp('SYNC-STIM - dprimeDiff predicted by NfalsePos_diff')
-disp(results.pValue)
-
 fsz = 10;
 % STATS for manuscript
 dirName = ('E:\Data_p\BEHAVIOR\memTestPatients_STATS');

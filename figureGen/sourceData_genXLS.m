@@ -169,6 +169,16 @@ mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig5_3_3_table.mat'));
 T = mm.data_table;
 writetable(T,sourceXls,'Sheet','i')
 
+%% Extended Data Fig 6 - 
+sourceXls = fullfile(outputPubFolder,'sourceExtendedDataFig6.xls');
+mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig6d1_table.mat'));
+T = mm.data_table;
+writetable(T,sourceXls,'Sheet','d1')
+
+mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig6d2_table.mat'));
+T = mm.data_table;
+writetable(T,sourceXls,'Sheet','d2')
+
 %% Extended Data Fig 7 - 
 sourceXls = fullfile(outputPubFolder,'sourceExtendedDataFig7.xls');
 mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig1c1_table.mat'));
@@ -183,7 +193,16 @@ mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig7c_data_table.mat'));
 T = mm.data_table;
 writetable(T,sourceXls,'Sheet','c')
 
+%% Extended Data Fig 8 - 
+sourceXls = fullfile(outputPubFolder,'sourceExtendedDataFig8.xls');
 
+mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig8a_data_table.mat'));
+T = mm.data_table;
+writetable(T,sourceXls,'Sheet','a')
+
+mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig8b_data_table.mat'));
+T = mm.data_table;
+writetable(T,sourceXls,'Sheet','b')
 
 %% Extended Data Fig 9 - 
 sourceXls = fullfile(outputPubFolder,'sourceExtendedDataFig9.xls');
@@ -204,3 +223,8 @@ mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig9d_table.mat'));
 T = mm.data_table;
 writetable(T,sourceXls,'Sheet','d')
 
+%% Extended Data Fig 10 - 
+sourceXls = fullfile(outputPubFolder,'sourceExtendedDataFig10.xls');
+mm = matfile(fullfile(outputPubFolder,'ExtendedDataFig10b_data_table.mat'));
+T = mm.data_table;
+writetable(T,sourceXls,'Sheet','b')
